@@ -1,9 +1,48 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
 
-const routes = [
-  { path: '/', component: () => import('../views/index.vue') },
-  { path: '/posts', component: () => import('../views/posts.vue') },
-  { path: '/login', component: () => import('../views/login.vue') }
+const routes: RouteRecordRaw[] = [
+  {
+    path: '/',
+    component: () => import('../views/index.vue')
+  },
+  {
+    path: '/posts',
+    name: 'Posts',
+    component: () => import('../views/posts.vue'),
+    children: [
+      {
+        path: '/posts',
+        name: 'PostsIndex',
+        component: () => import('../views/posts/index.vue')
+      },
+      {
+        path: 'edit',
+        name: 'PostsEdit',
+        component: () => import('../views/posts/edit.vue')
+      }
+    ]
+  },
+  {
+    path: '/metas',
+    name: 'Metas',
+    component: () => import('../views/metas.vue'),
+    children: [
+      {
+        path: '/metas/tags',
+        name: 'Tags',
+        component: () => import('../views/metas/tags.vue')
+      }
+    ]
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: () => import('../views/settings.vue')
+  },
+  {
+    path: '/login',
+    component: () => import('../views/login.vue')
+  }
 ]
 
 const router = createRouter({

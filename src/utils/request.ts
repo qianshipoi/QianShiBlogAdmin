@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { useMessage } from 'naive-ui'
+import { GlobalResponse, GlobalResponseT } from '../types/appTypes';
 
 interface Result {
   code: number;
@@ -9,7 +10,7 @@ interface Result {
 interface ResultData<T = any> extends Result {
   data?: T;
 }
-const URL: string = ''
+const URL: string = 'http://localhost:5142/api'
 
 enum RequestEnums {
   TIMEOUT = 20000,
@@ -26,9 +27,11 @@ const config = {
   // 跨域时候允许携带凭证
   withCredentials: true
 }
+
 class RequestHttp {
   // 定义成员变量并指定类型
   service: AxiosInstance;
+
   public constructor(config: AxiosRequestConfig) {
     // 实例化axios
     this.service = axios.create(config);
@@ -60,7 +63,7 @@ class RequestHttp {
      */
     this.service.interceptors.response.use(
       (response: AxiosResponse) => {
-        const { data, config } = response; // 解构
+        const { data } = response; // 解构
         if (data.code === RequestEnums.OVERDUE) {
           // 登录信息失效，应跳转到登录页面，并清空本地的token
           localStorage.setItem('token', '');
@@ -91,6 +94,7 @@ class RequestHttp {
       }
     )
   }
+
   handleCode(code: number): void {
     switch (code) {
       case 401:
@@ -103,17 +107,20 @@ class RequestHttp {
   }
 
   // 常用方法封装
-  get<T>(url: string, params?: object): Promise<ResultData<T>> {
+  get<T>(url: string, params?: object): Promise<GlobalResponseT<T>> {
     return this.service.get(url, { params });
   }
-  post<T>(url: string, params?: object): Promise<ResultData<T>> {
+
+  post<T>(url: string, params?: object): Promise<GlobalResponseT<T>> {
     return this.service.post(url, params);
   }
-  put<T>(url: string, params?: object): Promise<ResultData<T>> {
-    return this.service.put(url, params);
+
+  put<T>(url: string, params?: object): Promise<GlobalResponseT<T>> {
+    return this.service.put(url, { params });
   }
-  delete<T>(url: string, params?: object): Promise<ResultData<T>> {
-    return this.service.delete(url, { params });
+
+  delete<T>(url: string, params?: object): Promise<GlobalResponseT<T>> {
+    return this.service.delete(url, params);
   }
 }
 
