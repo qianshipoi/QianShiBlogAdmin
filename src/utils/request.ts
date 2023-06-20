@@ -1,15 +1,8 @@
 import axios, { AxiosInstance, AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { useMessage } from 'naive-ui'
-import { GlobalResponse, GlobalResponseT } from '../types/appTypes';
+import { GlobalResponseT } from '../types/appTypes';
+import { useAuthStore } from '../store';
+import { toRaw } from 'vue';
 
-interface Result {
-  code: number;
-  msg: string
-}
-
-interface ResultData<T = any> extends Result {
-  data?: T;
-}
 const URL: string = 'http://localhost:5142/api'
 
 enum RequestEnums {
@@ -25,7 +18,7 @@ const config = {
   // 设置超时时间
   timeout: RequestEnums.TIMEOUT as number,
   // 跨域时候允许携带凭证
-  withCredentials: true
+  withCredentials: false
 }
 
 class RequestHttp {
@@ -43,12 +36,18 @@ class RequestHttp {
      */
     this.service.interceptors.request.use(
       (config: any) => {
-        const token = localStorage.getItem('token') || '';
+        let headers = {
+          Authorization: undefined as undefined | string
+        }
+        const auth = useAuthStore()
+
+        if (auth.isAuthenticated) {
+          headers.Authorization = `Bearer ${auth.userInfo?.jwToken}`
+        }
+
         return {
           ...config,
-          headers: {
-            'x-access-token': token, // 请求头中携带token信息
-          }
+          headers
         }
       },
       (error: AxiosError) => {
@@ -66,7 +65,10 @@ class RequestHttp {
         const { data } = response; // 解构
         if (data.code === RequestEnums.OVERDUE) {
           // 登录信息失效，应跳转到登录页面，并清空本地的token
-          localStorage.setItem('token', '');
+
+          const auth = useAuthStore()
+          auth.isAuthenticated = false
+          auth.userInfo = null
           // router.replace({
           //   path: '/login'
           // })
@@ -74,7 +76,7 @@ class RequestHttp {
         }
         // 全局错误信息拦截（防止下载文件得时候返回数据流，没有code，直接报错）
         if (data.code && data.code !== RequestEnums.SUCCESS) {
-          useMessage().error(data);
+          window.$message.error(data)
           return Promise.reject(data)
         }
         return data;
@@ -85,7 +87,7 @@ class RequestHttp {
           this.handleCode(response.status)
         }
         if (!window.navigator.onLine) {
-          useMessage().error('网络链接失败')
+          window.$message.error('网络链接失败')
           // 可以跳转到错误页面，也可以不做操作
           // return router.replace({
           //   path: '/404'
@@ -96,12 +98,13 @@ class RequestHttp {
   }
 
   handleCode(code: number): void {
+    const message = window.$message;
     switch (code) {
       case 401:
-        useMessage().error('登录失败，请重新登录');
+        message.error('登录失败，请重新登录');
         break;
       default:
-        useMessage().error('请求失败');
+        message.error('请求失败');
         break;
     }
   }

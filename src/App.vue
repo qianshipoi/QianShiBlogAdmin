@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { lightTheme } from 'naive-ui'
 import { BuiltInGlobalTheme } from 'naive-ui/es/themes/interface';
+import UseMessageComponent from './components/useMessageComponents.vue'
 
 const theme = ref<BuiltInGlobalTheme>(lightTheme)
 
@@ -9,13 +10,16 @@ const theme = ref<BuiltInGlobalTheme>(lightTheme)
 
 <template>
   <n-config-provider style="min-height: 100vh;" :theme="theme">
-    <n-layout>
-      <n-layout-header>
-        <NavBar></NavBar>
-      </n-layout-header>
-      <n-layout-content content-style="padding: 24px;">
-        <router-view></router-view>
-      </n-layout-content>
-    </n-layout>
+    <n-message-provider>
+      <UseMessageComponent></UseMessageComponent>
+      <n-layout>
+        <n-layout-header>
+          <NavBar></NavBar>
+        </n-layout-header>
+        <n-layout-content content-style="padding: 24px;">
+          <router-view></router-view>
+        </n-layout-content>
+      </n-layout>
+    </n-message-provider>
   </n-config-provider>
 </template>

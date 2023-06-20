@@ -20,7 +20,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "types": [
-      "naive-ui/volar"
+      "naive-ui/volar",
     ]
   },
   "include": [

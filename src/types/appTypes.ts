@@ -64,9 +64,9 @@ export interface PostType {
 }
 
 export interface LoginResponse {
-  Id: string
+  id: string
   userName: string
   email: string,
   roles: Array<string>
-  jWToken: string
+  jwToken: string
 }

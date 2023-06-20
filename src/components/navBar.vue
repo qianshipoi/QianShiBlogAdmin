@@ -4,6 +4,7 @@ import { NIcon } from 'naive-ui'
 import type { MenuOption } from 'naive-ui'
 import { BookOutline as BookIcon } from '@vicons/ionicons5'
 import { RouterLink, useRoute } from 'vue-router';
+import { watch } from 'vue';
 
 function renderIcon(icon: Component) {
   return () => h(NIcon, null, { default: () => h(icon) })
@@ -57,6 +58,10 @@ const menuOptions: MenuOption[] = [
 const route = useRoute()
 
 const activeKey = ref<string | null>(route.name as string)
+
+watch(() => route.fullPath, () => {
+  activeKey.value = route.name as string
+})
 
 </script>
 
