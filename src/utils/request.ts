@@ -1,7 +1,6 @@
 import axios, { AxiosInstance, AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { GlobalResponseT } from '../types/appTypes';
-import { useAuthStore } from '../store';
-import { toRaw } from 'vue';
+import { useAuthStore } from '../store/useAuthStore';
 
 const URL: string = 'http://localhost:5142/api'
 

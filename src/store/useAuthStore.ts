@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { login } from '../api/api.ts'
-import { LoginResponse } from '../types/appTypes'
+import { LoginResponse } from '../types/appTypes.ts'
 
 export const useAuthStore = defineStore('authStore', {
   state: () => ({

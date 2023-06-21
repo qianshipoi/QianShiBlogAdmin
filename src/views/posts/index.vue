@@ -3,20 +3,16 @@
 </template>
 
 <script setup lang='ts'>
-
-
 import { onMounted } from 'vue';
-import { getMetas } from '../../api/api'
 import { BlogMetaType } from '../../types/appTypes';
+import { useMetasStore } from '../../store/useMetaStore';
+
+const metasStore = useMetasStore()
 
 onMounted(() => {
-  getMetas(BlogMetaType.Category).then(res => {
-    console.log(res);
-  })
+  metasStore.getMetas(BlogMetaType.Category);
+  metasStore.getMetas(BlogMetaType.Tag);
 })
-
 
 </script>
 
-<style>
-</style>

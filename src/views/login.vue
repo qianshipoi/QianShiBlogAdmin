@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import { useMessage, FormInst } from 'naive-ui';
 import { ref } from 'vue';
-import { useAuthStore } from '../store';
+import { useAuthStore } from '../store/useAuthStore';
 import { useRoute, useRouter } from 'vue-router';
 
 const formRef = ref<FormInst | null>(null)
