@@ -80,7 +80,6 @@ const createColumns = ({
 
 const columns = createColumns({
   edit(row: BlogMeta) {
-    window.$message.info(row.name)
     formValue.value = row;
     showModal.value = true
   },
@@ -189,12 +188,12 @@ const add = () => {
         <n-form-item label="描述">
           <n-input v-model:value="formValue.description" placeholder="输入描述" />
         </n-form-item>
-        <n-form-item label="父级" path="parent">
+        <!-- <n-form-item label="父级" path="parent">
           <n-input-number v-model:value="formValue.parent" placeholder="选择父级" />
-        </n-form-item>
+        </n-form-item> -->
         <n-form-item>
           <n-button attr-type="button" @click="handleValidateClick">
-            验证
+            提交
           </n-button>
         </n-form-item>
       </n-form>

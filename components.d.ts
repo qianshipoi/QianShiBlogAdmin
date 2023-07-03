@@ -9,7 +9,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
-    NavBar: typeof import('./src/components/NavBar.vue')['default']
+    NavBar: typeof import('./src/components/navBar.vue')['default']
     NButton: typeof import('naive-ui')['NButton']
     NCard: typeof import('naive-ui')['NCard']
     NConfigProvider: typeof import('naive-ui')['NConfigProvider']
@@ -21,15 +21,13 @@ declare module '@vue/runtime-core' {
     NInputNumber: typeof import('naive-ui')['NInputNumber']
     NLayout: typeof import('naive-ui')['NLayout']
     NLayoutContent: typeof import('naive-ui')['NLayoutContent']
-    NLayoutFooter: typeof import('naive-ui')['NLayoutFooter']
     NLayoutHeader: typeof import('naive-ui')['NLayoutHeader']
     NMenu: typeof import('naive-ui')['NMenu']
     NMessageProvider: typeof import('naive-ui')['NMessageProvider']
     NModal: typeof import('naive-ui')['NModal']
-    NNInputNumber: typeof import('naive-ui')['NNInputNumber']
-    NSpace: typeof import('naive-ui')['NSpace']
+    NTree: typeof import('naive-ui')['NTree']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    UseMessageComponents: typeof import('./src/components/UseMessageComponents.vue')['default']
+    UseMessageComponents: typeof import('./src/components/useMessageComponents.vue')['default']
   }
 }
