@@ -1,6 +1,8 @@
 import axios, { AxiosInstance, AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { GlobalResponseT } from '../types/appTypes';
 import { useAuthStore } from '../store/useAuthStore';
+import { useRoute, useRouter } from 'vue-router';
+import router from '../router';
 
 const URL: string = 'http://localhost:5142/api'
 
@@ -92,6 +94,7 @@ class RequestHttp {
           //   path: '/404'
           // });
         }
+        return Promise.reject("请求异常")
       }
     )
   }
@@ -101,6 +104,18 @@ class RequestHttp {
     switch (code) {
       case 401:
         message.error('登录失败，请重新登录');
+        const authStore = useAuthStore()
+
+        if (router.currentRoute.value.name !== "Login") {
+          authStore.$reset();
+          router.replace({
+            name: 'Login',
+            query: {
+              redirect: router.currentRoute.value.fullPath
+            }
+          })
+        }
+
         break;
       default:
         message.error('请求失败');
@@ -113,16 +128,16 @@ class RequestHttp {
     return this.service.get(url, { params });
   }
 
-  post<T>(url: string, params?: object): Promise<GlobalResponseT<T>> {
-    return this.service.post(url, params);
+  post<T>(url: string, body?: object): Promise<GlobalResponseT<T>> {
+    return this.service.post(url, body);
   }
 
-  put<T>(url: string, params?: object): Promise<GlobalResponseT<T>> {
-    return this.service.put(url, { params });
+  put<T>(url: string, body?: object): Promise<GlobalResponseT<T>> {
+    return this.service.put(url, body);
   }
 
   delete<T>(url: string, params?: object): Promise<GlobalResponseT<T>> {
-    return this.service.delete(url, params);
+    return this.service.delete(url, { params });
   }
 }
 

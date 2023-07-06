@@ -27,7 +27,7 @@
 
 
 <script setup lang='ts'>
-import { onMounted, h, ref, nextTick } from 'vue';
+import { onMounted, h, ref, nextTick, toRaw, watchEffect } from 'vue';
 import { BlogMeta, BlogMetaType } from '../types/appTypes';
 import { useMetasStore } from '../store/useMetaStore';
 import { useMessage, NIcon, TreeOption, FormInst, TreeSelectOption, useDialog } from 'naive-ui'
@@ -36,8 +36,6 @@ import {
   FolderOpenOutline,
   FileTrayFullOutline
 } from '@vicons/ionicons5'
-import { watchEffect } from 'vue';
-import { toRaw } from 'vue';
 import { DropdownMixedOption } from 'naive-ui/lib/dropdown/src/interface';
 
 const metasStore = useMetasStore()
@@ -68,9 +66,14 @@ const rules = {
 
 const handleValidateClick = (e: MouseEvent) => {
   e.preventDefault()
-  formRef.value?.validate((errors) => {
+  formRef.value?.validate(async (errors) => {
     if (!errors) {
-      message.success('Valid')
+      if (formValue.value.id === 0) {
+        await metasStore.addMeta({ ...formValue.value, type: BlogMetaType.Category })
+      } else {
+        await metasStore.editMeta({ ...formValue.value, type: BlogMetaType.Category })
+      }
+      showModal.value = false
     } else {
       console.log(errors)
       message.error('Invalid')
@@ -103,13 +106,17 @@ const edit = (meta: BlogMeta) => {
 const dialog = useDialog()
 
 const del = (meta: BlogMeta) => {
-  dialog.warning({
+  const d = dialog.warning({
     title: '警告',
     content: `你确定删除[${meta.name}]类别？`,
     positiveText: '确定',
     negativeText: '取消',
     onPositiveClick: () => {
-      message.success('确定')
+      d.loading = true;
+      return new Promise((resolve) => {
+        metasStore.delMeta(selectedMeta.value!.id, BlogMetaType.Category)
+          .then(resolve).catch(err => message.error(err))
+      })
     },
   })
 }

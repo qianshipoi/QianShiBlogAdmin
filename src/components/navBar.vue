@@ -5,7 +5,9 @@ import type { MenuOption } from 'naive-ui'
 import { BookOutline as BookIcon } from '@vicons/ionicons5'
 import { RouterLink, useRoute } from 'vue-router';
 import { watch } from 'vue';
+import useLocale from '../hook/useLocale'
 
+const { i18n: { t }, currentLocale, changeLocale } = useLocale()
 function renderIcon(icon: Component) {
   return () => h(NIcon, null, { default: () => h(icon) })
 }
@@ -20,7 +22,7 @@ const menuOptions: MenuOption[] = [
             name: 'PostsIndex'
           }
         },
-        { default: () => '文章' }
+        { default: () => t('navbar.action.post') }
       ),
     key: 'PostsIndex',
     icon: renderIcon(BookIcon),
@@ -34,7 +36,7 @@ const menuOptions: MenuOption[] = [
             name: 'Tags'
           }
         },
-        { default: () => '标签' }
+        { default: () => t('navbar.action.tags') }
       ),
     key: 'Tags',
     icon: renderIcon(BookIcon),
@@ -48,7 +50,7 @@ const menuOptions: MenuOption[] = [
             name: 'Settings'
           }
         },
-        { default: () => '设置' }
+        { default: () => t('navbar.action.settings') }
       ),
     key: 'Settings',
     icon: renderIcon(BookIcon),
@@ -63,8 +65,20 @@ watch(() => route.fullPath, () => {
   activeKey.value = route.name as string
 })
 
+const switchLang = () => {
+  if (currentLocale.value === 'zh-CN') {
+    changeLocale('en-US')
+  } else {
+    changeLocale('zh-CN')
+  }
+}
+
 </script>
 
 <template>
-  <n-menu v-model:value="activeKey" mode="horizontal" :options="menuOptions" />
+  <div style="display: flex; align-items: center; justify-content: space-between;">
+    <n-menu v-model:value="activeKey" mode="horizontal" :options="menuOptions" />
+    <n-button size="medium" @click="switchLang">
+      {{ currentLocale === 'zh-CN' ? "Englisth" : "中文" }}</n-button>
+  </div>
 </template>
